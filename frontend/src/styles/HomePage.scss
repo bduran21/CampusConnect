@@ -1,0 +1,237 @@
+@import "./global.scss";
+
+/* CTA Bar */
+.cta-bar {
+    background-color: #81d4fa;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+
+    .cta-button {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+
+        .cta-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            animation: slideIn 1s ease-out forwards;
+            position: relative;
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(-100%);
+                }
+
+                to {
+                    transform: translateX(0);
+                }
+            }
+
+            .cta-icon {
+                font-size: 1.5rem;
+                /* Slightly larger for visibility */
+                color: white;
+                /* Matches the text color */
+                transition: transform 0.2s ease;
+            }
+
+            &:hover .cta-icon {
+                transform: translateX(5px);
+                /* Moves slightly to the right */
+            }
+        }
+    }
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    /* Required for pseudo-element positioning */
+    background-image: var(--hero-image);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    height: calc(100vh - 50px);
+    max-height: 100vh;
+    overflow: hidden;
+
+    /* Overlay to darken the background image */
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        /* Black overlay with 50% opacity */
+        z-index: 1;
+        /* Ensures it stays behind the content */
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5rem;
+        margin-top: -15rem;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 1200px;
+
+        .hero-left {
+            flex: 1;
+            padding-right: 2rem;
+            margin-top: -10rem;
+            animation: slideIn 1.2s ease-out forwards;
+
+            h1 {
+                font-size: 2.5rem;
+                color: #81d4fa;
+                margin-bottom: 1rem;
+                text-align: left;
+            }
+
+            p {
+                font-size: 1.5rem;
+                color: #FFFFFF;
+                text-align: left;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(-100%);
+                }
+
+                to {
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        .hero-right {
+            flex: 1;
+        }
+    }
+}
+
+/* What We Do Section */
+.what-we-do {
+    background-color: #f8f9fa;
+    padding: 4rem 2rem;
+
+    .what-we-do-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+
+        .image-container {
+            flex: 1;
+
+            img {
+                width: 100%;
+                border-radius: 8px;
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        .text-container {
+            flex: 1;
+
+            h2 {
+                font-size: 2rem;
+                font-weight: 600;
+                color: #81d4fa;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                font-size: 1rem;
+                color: #333;
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            .learn-more-button {
+                background-color: #81d4fa;
+                color: white;
+                border: none;
+                padding: 0.8rem 1.5rem;
+                border-radius: 20px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: #6ec6f3;
+                }
+            }
+        }
+    }
+}
+
+/* Features Section */
+.features {
+    background-color: #ffffff;
+    padding: 4rem 2rem;
+
+    .features-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+
+        .features-left {
+            flex: 1;
+
+            .feature {
+                margin-bottom: 2rem;
+
+                h3 {
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    color: #81d4fa;
+                    margin-bottom: 0.5rem;
+                }
+
+                p {
+                    font-size: 1rem;
+                    color: #333;
+                    line-height: 1.6;
+                }
+            }
+        }
+
+        .features-right {
+            flex: 1;
+
+            img {
+                width: 100%;
+                border-radius: 8px;
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+}
