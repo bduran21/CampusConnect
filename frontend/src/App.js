@@ -1,10 +1,10 @@
+// App.js
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import FriendsPage from "./pages/FriendsPage";
 import CalendarPage from "./pages/CalendarPage";
 import AboutUsPage from "./pages/AboutUsPage";
-
 import { initializeUserData } from "./data/initializeData";
 
 function App() {
