@@ -1,5 +1,8 @@
 {
   "homepage": "https://bduran21.github.io/CampusConnect/",
+  "friendpage": "https://bduran21.github.io/CampusConnect/friends",
+  "calendarpage": "https://bduran21.github.io/CampusConnect/calendar",
+  "aboutpage": "https://bduran21.github.io/CampusConnect/about-us",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
