@@ -1,4 +1,3 @@
-// index.js
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter as Router } from "react-router-dom"; // Import HashRouter
