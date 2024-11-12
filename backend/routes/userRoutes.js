@@ -1,27 +1,41 @@
 const express = require("express");
-const { Clerk } = require("@clerk/clerk-sdk-node");
-
 const router = express.Router();
+const { createClerkClient } = require("@clerk/clerk-sdk-node");
 
-// Initialize Clerk with the secret key
-const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
+// Initialize Clerk client
+const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
-// Route to search users by name
+// Search for users by name
 router.get("/search", async (req, res) => {
-  const query = req.query.q; // The search query from the frontend
+  const query = req.query.q;
+
+  if (!query) {
+    return res.status(400).json({ error: "Query parameter 'q' is required" });
+  }
+
   try {
-    const users = await clerk.users.getUserList({
-      query,
-      limit: 10, // Limit the number of results
-    });
-    res.json(users.map((user) => ({
+    // Use Clerk's query parameter for searching users
+    const response = await clerk.users.getUserList({ query });
+    console.log("Clerk API Response:", response);
+
+    // Access the `data` property, which contains the array of users
+    const allUsers = response.data;
+
+    if (!Array.isArray(allUsers)) {
+      throw new Error("Unexpected response from Clerk API: `data` is not an array");
+    }
+
+    // Map results to return the required fields
+    const results = allUsers.map((user) => ({
       id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
-      imageUrl: user.profileImageUrl,
-    })));
+      name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+      imageUrl: user.profileImageUrl || "/default-avatar.png",
+    }));
+
+    res.json(results);
   } catch (error) {
-    console.error("Error searching users:", error);
-    res.status(500).json({ error: "Failed to search users" });
+    console.error("Error searching users:", error.message, error.stack);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

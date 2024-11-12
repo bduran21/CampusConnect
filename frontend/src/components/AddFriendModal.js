@@ -1,92 +1,58 @@
 import React, { useState, useEffect } from "react";
 import "../styles/AddFriendModal.scss";
-import { useClerk } from "@clerk/clerk-react";
 
 function AddFriendModal({ onClose, onAddFriend }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [friendName, setFriendName] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const { client } = useClerk();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (searchQuery.trim() === "") {
+    if (friendName.trim() === "") {
       setSearchResults([]);
       return;
     }
 
-    const delayDebounceFn = setTimeout(() => {
-      searchUsers();
-    }, 300); // Wait 300ms after user stops typing
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery]);
-
-  const searchUsers = async () => {
-    setLoading(true);
-
-    try {
-      const users = await client.users.getUserList({
-        query: searchQuery, // Searches by name
-        limit: 10, // Limits results to 10 users
-      });
-
-      setSearchResults(users);
-    } catch (error) {
-      console.error("Error searching users:", error);
-    }
-
-    setLoading(false);
-  };
-
-  const handleAddFriend = (user) => {
-    const newFriend = {
-      id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
-      avatar: user.profileImageUrl || "",
+    const searchUsers = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `http://localhost:5001/api/users/search?q=${friendName}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch users");
+        }
+        const data = await response.json();
+        setSearchResults(Array.isArray(data) ? data : []); // Ensure data is an array
+      } catch (error) {
+        console.error("Error searching users:", error);
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    onAddFriend(newFriend);
-    setSearchQuery("");
-    setSearchResults([]);
-  };
+    searchUsers();
+  }, [friendName]);
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Add a Friend</h2>
-        <div className="search-section">
-          <input
-            type="text"
-            placeholder="Search by name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {loading && <div className="loading-spinner">Searching...</div>}
-        </div>
-        {searchResults.length > 0 && (
-          <div className="autocomplete-dropdown">
-            {searchResults.map((user) => (
-              <div
-                className="dropdown-item"
-                key={user.id}
-                onClick={() => handleAddFriend(user)}
-              >
-                <div className="avatar">
-                  {user.profileImageUrl ? (
-                    <img src={user.profileImageUrl} alt={user.firstName} />
-                  ) : (
-                    <div className="placeholder-avatar">
-                      {user.firstName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <p className="user-name">
-                  {user.firstName} {user.lastName}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+        <input
+          type="text"
+          placeholder="Search for a friend"
+          value={friendName}
+          onChange={(e) => setFriendName(e.target.value)}
+        />
+        {isLoading && <p>Loading...</p>}
+        <ul className="autocomplete-list">
+          {searchResults.map((user) => (
+            <li key={user.id} onClick={() => onAddFriend(user)}>
+              <img src={user.imageUrl} alt={user.name} />
+              <span>{user.name}</span>
+            </li>
+          ))}
+        </ul>
         <div className="modal-actions">
           <button onClick={onClose}>Cancel</button>
         </div>
