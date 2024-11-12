@@ -26,6 +26,7 @@ Campus Connect is a platform designed to help students connect with their peers,
 
 ### Backend
 - **LocalStorage**: Used as a temporary database for storing user and event data.
+- **Node.JS/Express**: Used as a smalle server and created routes to clerk api
 
 ### Development Tools
 - **VS Code**: Code editor.
