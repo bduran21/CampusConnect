@@ -29,12 +29,12 @@ function AboutUsPage() {
                         <div className="team-member">
                             <img src={AlexImage} alt="Alex Bernatowicz" />
                             <h3>Alex Bernatowicz</h3>
-                            <p>Founder & Developer</p>
+                            <p>Frontend Engineer</p>
                         </div>
                         <div className="team-member">
                             <img src={ChaveImage} alt="Isabella Linarez" />
                             <h3>Isabella Linarez</h3>
-                            <p>Designer & UI Specialist</p>
+                            <p>Scrum Master</p>
                         </div>
                         <div className="team-member">
                             <img src={SteveImage} alt="Steven Reveles" />
