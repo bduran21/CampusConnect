@@ -1,4 +1,9 @@
 .friends-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    /* Full height for the page */
     .header {
         display: flex;
         justify-content: space-between;
@@ -27,7 +32,8 @@
         }
 
         .toggle-switch {
-            margin-right: 0.5rem; /* Reduce spacing to bring toggle closer to the button */
+            margin-right: 0.5rem;
+            /* Reduce spacing to bring toggle closer to the button */
         }
 
         /* Wrap toggle and button in a container to manage alignment better */
@@ -36,11 +42,13 @@
             align-items: center;
 
             .toggle-switch {
-                margin-right: 0.5rem; /* Minimal space */
+                margin-right: 0.5rem;
+                /* Minimal space */
             }
 
             .add-friend-button {
-                margin: 0; /* Ensure no extra margins */
+                margin: 0;
+                /* Ensure no extra margins */
             }
         }
     }
@@ -51,11 +59,16 @@
         padding: 2rem;
 
         &.grid-view {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, minmax(200px, 1fr));
+            max-width: 100%;
+            /* Allow it to use full width when needed */
+            margin: 0 auto;
+            /* Center align */
         }
 
         &.list-view {
-            grid-template-columns: 1fr; /* Single column for list view */
+            grid-template-columns: 1fr;
+            /* Single column for list view */
         }
 
         .friend-card {

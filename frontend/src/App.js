@@ -5,7 +5,6 @@ import FriendsPage from "./pages/FriendsPage";
 import CalendarPage from "./pages/CalendarPage";
 import AboutUsPage from "./pages/AboutUsPage";
 
-
 function App() {
   return (
     <Routes>
