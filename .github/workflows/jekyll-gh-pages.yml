@@ -1,58 +1,31 @@
-name: Deploy Node Project
+name: Deploy React App to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    branches:
+      - main  # Trigger deployment when there's a push to the main branch
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Backend Dependencies
-        working-directory: ./backend
-        run: |
-          npm install
-
-      - name: Install Frontend Dependencies
-        working-directory: ./frontend
-        run: |
-          npm install
-
-      - name: Build Frontend
-        working-directory: ./frontend
-        run: |
-          npm run build
-
-      - name: Upload Frontend Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          name: frontend-artifact
-          path: ./frontend/build
+          node-version: '16'  # Specify the Node.js version you're using
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+      - name: Install dependencies and build
+        run: |
+          cd frontend
+          npm install
+          npm run build  # Build the React app
+
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          artifact-name: frontend-artifact
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: frontend/build  # Path to the built static files
