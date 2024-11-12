@@ -6,14 +6,15 @@ import "../styles/FriendsPage.scss";
 
 function FriendsPage() {
   const [friends, setFriends] = useState([]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const addFriend = (friend) => {
-    setFriends([...friends, friend]);
+    if (!friends.some((f) => f.id === friend.id)) {
+      setFriends([...friends, friend]); // Add the new friend without duplicates
+    }
     closeModal();
   };
 
@@ -31,8 +32,8 @@ function FriendsPage() {
           {friends.map((friend) => (
             <div className="friend-card" key={friend.id}>
               <div className="avatar">
-                {friend.avatar ? (
-                  <img src={friend.avatar} alt={friend.name} />
+                {friend.imageUrl ? (
+                  <img src={friend.imageUrl} alt={friend.name} />
                 ) : (
                   <div className="placeholder-avatar">
                     {friend.name.charAt(0).toUpperCase()}

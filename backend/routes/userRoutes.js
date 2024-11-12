@@ -2,10 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { createClerkClient } = require("@clerk/clerk-sdk-node");
 
-// Initialize Clerk client
 const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
-// Search for users by name
 router.get("/search", async (req, res) => {
   const query = req.query.q;
 
@@ -14,22 +12,27 @@ router.get("/search", async (req, res) => {
   }
 
   try {
-    // Use Clerk's query parameter for searching users
-    const response = await clerk.users.getUserList({ query });
-    console.log("Clerk API Response:", response);
+    // Fetch users from Clerk API
+    const response = await clerk.users.getUserList();
 
-    // Access the `data` property, which contains the array of users
-    const allUsers = response.data;
+    // Ensure the response contains the `data` array
+    const allUsers = response?.data;
 
     if (!Array.isArray(allUsers)) {
-      throw new Error("Unexpected response from Clerk API: `data` is not an array");
+      throw new Error("Unexpected response format from Clerk API");
     }
 
-    // Map results to return the required fields
-    const results = allUsers.map((user) => ({
+    // Filter users by name
+    const filteredUsers = allUsers.filter((user) => {
+      const fullName = `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
+      return fullName.includes(query.toLowerCase());
+    });
+
+    // Map results to required fields
+    const results = filteredUsers.map((user) => ({
       id: user.id,
       name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-      imageUrl: user.profileImageUrl || "/default-avatar.png",
+      imageUrl: user.imageUrl || "https://via.placeholder.com/40", // Use Clerk imageUrl if present
     }));
 
     res.json(results);
