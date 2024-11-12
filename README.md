@@ -43,14 +43,16 @@ Ensure you have the following installed:
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo-link/campus-connect.git
+   git clone
    cd campus-connect
 2. Install Dependencies
+    ```bash
     cd into backend
     npm install
     cd into frontend
     npm install
 3. Start the development server:
+   ```bash
     npm start
 4.	Open the application:
     Visit http://localhost:3000 in your browser.
