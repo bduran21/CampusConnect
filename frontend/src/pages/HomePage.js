@@ -13,6 +13,21 @@ import { useNavigate } from "react-router-dom";
 function HomePage() {
   const navigate = useNavigate();
 
+  const handleLearnMoreClick = () => {
+    const featuresSection = document.getElementById("features");
+    if (featuresSection) {
+      // Calculate the section's top position relative to the document
+      const topPosition = featuresSection.offsetTop;
+
+      // Adjust for offset (e.g., raising the scroll target by 50px or 3rem)
+      const offset = -50; // Negative value raises the point
+      window.scrollTo({
+        top: topPosition + offset,
+        behavior: "smooth",
+      });
+    }
+  };
+  
   return (
     <div style={{ "--hero-image": `url(${HeroImage})` }}>
       <NavBar />
@@ -79,7 +94,10 @@ function HomePage() {
               With our easy-to-use platform, you can streamline your planning
               and focus on what truly matters—your success and connections.
             </p>
-            <button className="learn-more-button">
+            <button
+              className="learn-more-button"
+              onClick={handleLearnMoreClick}
+            >
               Learn More <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
@@ -87,7 +105,7 @@ function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="features">
+      <section className="features" id="features">
         <div className="features-content">
           {/* Left Column */}
           <div className="features-left">
