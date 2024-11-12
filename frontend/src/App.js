@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import FriendsPage from "./pages/FriendsPage";
 import CalendarPage from "./pages/CalendarPage";
 import AboutUsPage from "./pages/AboutUsPage";
 
+import { initializeUserData } from "./data/initializeData";
+
 function App() {
+  useEffect(() => {
+    initializeUserData(); // Ensure data is initialized in localStorage
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />

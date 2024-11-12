@@ -1,17 +1,21 @@
-// src/pages/CalendarPage.js
-
 import React from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
+import Calendar from "../components/Calendar"; // Import the updated Calendar component
+import "../styles/CalendarPage.scss";
 
 function CalendarPage() {
+  const userId = "alex"; // Hardcoded for testing
+
   return (
-    <div>
+    <div className="calendar-page">
       <NavBar />
-      <main className="content">
+      <div className="calendar-content">
         <h1>Calendar</h1>
-        <p>This is the calendar page where you can manage your events.</p>
-      </main>
+        <div className="calendar-wrapper">
+          <Calendar userId={userId} />
+        </div>
+      </div>
       <Footer />
     </div>
   );
