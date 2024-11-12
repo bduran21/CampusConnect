@@ -8,7 +8,7 @@
   background-color: white;
   color: black;
   font-size: 0.9rem;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
-  position: relative; /* Maintain relative positioning */
-  width: 100%; /* Ensure it spans the full width */
+  box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0; /* Prevents the footer from growing */
+  width: 100%; /* Ensures it spans the full width */
 }

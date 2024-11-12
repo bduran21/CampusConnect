@@ -11,7 +11,7 @@ function CalendarPage() {
     <div className="calendar-page">
       <NavBar />
       <div className="calendar-content">
-        <h1>Calendar</h1>
+        <h1>My Calendar</h1>
         <div className="calendar-wrapper">
           <Calendar userId={userId} />
         </div>

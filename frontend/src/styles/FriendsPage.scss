@@ -1,7 +1,7 @@
 .friends-page {
-    // display: flex;
-    // flex-direction: column;
-    // min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 
     /* Full height for the page */
     .header {
@@ -57,6 +57,7 @@
         display: grid;
         gap: 1.5rem;
         padding: 2rem;
+
 
         &.grid-view {
             grid-template-columns: repeat(3, minmax(200px, 1fr));
