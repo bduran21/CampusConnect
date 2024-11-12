@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/AddFriendModal.scss";
 
 function AddFriendModal({ onClose, onAddFriend }) {
   const [friendName, setFriendName] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const modalRef = useRef(null); // Reference to the modal content
 
   useEffect(() => {
     const searchUsers = async () => {
@@ -12,18 +13,18 @@ function AddFriendModal({ onClose, onAddFriend }) {
         setSearchResults([]);
         return;
       }
-  
+
       setIsLoading(true);
-  
+
       try {
         const response = await fetch(
           `http://localhost:5001/api/users/search?q=${encodeURIComponent(friendName)}`
         );
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }
-  
+
         const data = await response.json();
         console.log("Search Results:", data); // Debug log
         setSearchResults(Array.isArray(data) ? data : []); // Ensure data is an array
@@ -34,14 +35,28 @@ function AddFriendModal({ onClose, onAddFriend }) {
         setIsLoading(false);
       }
     };
-  
+
     const debounceTimer = setTimeout(searchUsers, 300); // Debounce for 300ms
     return () => clearTimeout(debounceTimer);
   }, [friendName]);
 
+  // Close modal if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose(); // Close the modal
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content" ref={modalRef}>
         <h2>Add a Friend</h2>
         <div className="search-section">
           <input

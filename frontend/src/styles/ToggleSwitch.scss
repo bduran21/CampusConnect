@@ -1,0 +1,93 @@
+.toggle-switch {
+    position: relative;
+    width: 100px;
+    /* Increased width for better readability */
+    display: inline-block;
+    vertical-align: middle;
+
+    &-checkbox {
+        display: none;
+    }
+
+    &-label {
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid #ccc;
+        border-radius: 20px;
+        position: relative;
+        height: 36px;
+        /* Matches the height of the toggle */
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &-inner {
+        display: block;
+        width: 200%;
+        margin-left: -100%;
+        transition: margin 0.3s ease-in-out;
+
+        &:before,
+        &:after {
+            display: block;
+            float: left;
+            width: 50%;
+            height: 100%;
+            /* Matches parent height */
+            line-height: 36px;
+            /* Matches parent height */
+            box-sizing: border-box;
+        }
+
+        &:before {
+            content: attr(data-yes);
+            /* "Grid" */
+            text-align: center;
+            background-color: #81d4fa;
+            color: white;
+            font-size: 14px;
+            /* Readable font size */
+        }
+
+        &:after {
+            content: attr(data-no);
+            /* "List" */
+            text-align: center;
+            background-color: #ccc;
+            color: white;
+            font-size: 14px;
+            /* Readable font size */
+        }
+    }
+
+    &-switch {
+        display: block;
+        width: 28px;
+        /* Slightly larger for better visibility */
+        height: 28px;
+        /* Matches width */
+        margin: 4px;
+        /* Adjusted to center vertically */
+        background: white;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 68px;
+        /* Updated for alignment */
+        border-radius: 50%;
+        transition: all 0.3s ease-in-out;
+        box-shadow: none;
+        /* Removed the blue circle */
+    }
+
+    &-checkbox:checked+&-label .toggle-switch-inner {
+        margin-left: 0;
+    }
+
+    &-checkbox:checked+&-label .toggle-switch-switch {
+        right: 0;
+    }
+}
