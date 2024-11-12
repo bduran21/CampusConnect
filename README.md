@@ -7,9 +7,6 @@ Campus Connect is a platform designed to help students connect with their peers,
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
 - [Folder Structure](#folder-structure)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 - **Friend Management**: Add and view friends dynamically using a modern interface.
@@ -57,3 +54,22 @@ Ensure you have the following installed:
     npm start
 4.	Open the application:
     Visit http://localhost:3000 in your browser.
+
+
+## Folder Structure
+
+Campus Connect
+├── public
+├── src
+│   ├── assets          # Images and other static files
+│   ├── components      # Reusable React components
+│   ├── data            # Data initialization scripts
+│   ├── pages           # Application pages
+│   ├── styles          # SCSS style files
+│   ├── App.js          # Main application file
+│   ├── index.js        # Application entry point
+├── .env                # Environment variables
+├── package.json        # Project metadata and dependencies
+├── README.md           # Project documentation
+
+Developed with ❤️ by the Campus Connect Team
