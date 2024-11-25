@@ -1,3 +1,4 @@
+// src/components/NavBar.js
 import React from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
@@ -14,14 +15,12 @@ function NavBar() {
         <Link to="/friends" className="nav-link">Friends</Link>
         <Link to="/calendar" className="nav-link">Calendar</Link>
         <Link to="/about-us" className="nav-link">About Us</Link>
+        
         <SignedIn>
           <UserButton />
         </SignedIn>
         <SignedOut>
-          <SignInButton
-            mode="modal"
-            redirectUrl="https://bduran21.github.io/CampusConnect/#/"
-          />
+          <SignInButton mode="modal" className="SignIn" />
         </SignedOut>
       </div>
     </nav>
