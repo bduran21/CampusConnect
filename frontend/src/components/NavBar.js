@@ -1,7 +1,6 @@
 // src/components/NavBar.js
-
 import React from "react";
-import { Link } from "react-router-dom"; // Import Link for internal routing
+import { Link } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import "../styles/NavBar.scss";
 
@@ -16,6 +15,7 @@ function NavBar() {
         <Link to="/friends" className="nav-link">Friends</Link>
         <Link to="/calendar" className="nav-link">Calendar</Link>
         <Link to="/about-us" className="nav-link">About Us</Link>
+        
         <SignedIn>
           <UserButton />
         </SignedIn>
