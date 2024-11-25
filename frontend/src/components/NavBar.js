@@ -1,5 +1,7 @@
+// src/components/NavBar.js
+
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Import Link for internal routing
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import "../styles/NavBar.scss";
 
@@ -7,13 +9,6 @@ function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        {/* Redirect logo based on sign-in status */}
-        <SignedIn>
-          <Link href="/calendar" className="logo">Campus Connect</Link>
-        </SignedIn>
-        <SignedOut>
-          <Link href="/" className="logo">Campus Connect</Link>
-        </SignedOut>
         <Link to="/" className="logo">Campus Connect</Link>
       </div>
       <div className="navbar-right">
@@ -24,7 +19,12 @@ function NavBar() {
         <SignedIn>
           <UserButton />
         </SignedIn>
+        <SignedOut>
+          <SignInButton mode="modal" className="SignIn" />
+        </SignedOut>
       </div>
     </nav>
   );
 }
+
+export default NavBar;
