@@ -18,7 +18,8 @@ function App() {
       <Route path="/friends" element={<FriendsPage />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/about-us" element={<AboutUsPage />} />
-      <Route path="*" element={<HomePage to="/" />} />
+      <Route path="/*" element={<HomePage />} />
+      <Route path="/callback" element={<HomePage />} />
     </Routes>
   );
 }
