@@ -16,11 +16,18 @@ function NavBar() {
         <Link to="/calendar" className="nav-link">Calendar</Link>
         <Link to="/about-us" className="nav-link">About Us</Link>
         
+        {/* User button for signed-in users */}
         <SignedIn>
           <UserButton />
         </SignedIn>
+
+        {/* Sign-in button for signed-out users with a redirect URL */}
         <SignedOut>
-          <SignInButton mode="modal" className="SignIn" />
+          <SignInButton 
+            mode="modal" 
+            className="SignIn"
+            redirectUrl="https://bduran21.github.io/CampusConnect/#/" // Custom redirect URL for GitHub Pages
+          />
         </SignedOut>
       </div>
     </nav>
