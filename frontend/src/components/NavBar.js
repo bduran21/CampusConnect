@@ -25,8 +25,9 @@ function NavBar() {
         <SignedOut>
           <SignInButton 
             mode="modal" 
-            className="SignIn"
-            redirectUrl="https://bduran21.github.io/CampusConnect/#/" // Custom redirect URL for GitHub Pages
+            redirectUrl="https://bduran21.github.io/CampusConnect/#/"
+            afterSignInUrl="https://bduran21.github.io/CampusConnect/#/"
+            afterSignUpUrl="https://bduran21.github.io/CampusConnect/#/"
           />
         </SignedOut>
       </div>
