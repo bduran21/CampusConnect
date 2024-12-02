@@ -22,7 +22,10 @@ function Calendar({ userId, isEditable = true }) {
 
   const handleAddEvent = (newEvent) => {
     const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
-    const updatedEvents = [...events, { ...newEvent, id: Date.now().toString() }];
+    const updatedEvents = [
+      ...events,
+      { ...newEvent, id: Date.now().toString(), backgroundColor: newEvent.color },
+    ];
 
     if (!allCalendars[userId]) {
       allCalendars[userId] = { events: updatedEvents };
@@ -74,6 +77,12 @@ function Calendar({ userId, isEditable = true }) {
             }
           }
         }}
+        eventContent={(eventInfo) => (
+          <div style={{ backgroundColor: eventInfo.event.backgroundColor }}>
+            <b>{eventInfo.timeText}</b>
+            <i>{eventInfo.event.title}</i>
+          </div>
+        )}
       />
     </div>
   );
