@@ -37,8 +37,14 @@ function CalendarModal({ friend, onClose }) {
       <div className="modal-content">
         <h2>{friend.name}'s Calendar</h2>
         <Calendar userId={friend.id} isEditable={false} events={friendEvents} />
-        <button onClick={handleJoinCalendars}>Join Calendars</button>
-        <button onClick={onClose}>Close</button>
+        <div className="modal-actions">
+          <button onClick={handleJoinCalendars} className="join-calendar-button">
+            Join Calendars
+          </button>
+          <button onClick={onClose} className="close-modal-button">
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
