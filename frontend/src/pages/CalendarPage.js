@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
@@ -6,20 +7,14 @@ import Calendar from "../components/Calendar";
 import "../styles/CalendarPage.scss";
 
 function CalendarPage() {
-  const userId = "alex"; // Replace with dynamic user ID from authentication or state
+  const { userId } = useAuth(); // Retrieve user ID from Clerk
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const loadEvents = () => {
       const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
       const userEvents = allCalendars[userId]?.events || [];
-
-      // Merge friend's events, keeping their colors intact
-      const friendsEvents = Object.entries(allCalendars)
-        .filter(([key]) => key !== userId) // Exclude the current user
-        .flatMap(([key, calendar]) => calendar.events);
-
-      setEvents([...userEvents, ...friendsEvents]);
+      setEvents(userEvents); // Only set user's events here
     };
 
     loadEvents();

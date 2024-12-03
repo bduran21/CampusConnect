@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import "../styles/AddEventModal.scss";
 
-function AddEventModal({ onClose, onSave }) {
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
-  const [duration, setDuration] = useState(15); // Default duration
-  const [color, setColor] = useState("#3b82f6"); // Default color
+function AddEventModal({ event, onClose, onSave, onDelete }) {
+  const [title, setTitle] = useState(event?.title || "");
+  const [date, setDate] = useState(event?.start || "");
+  const [duration, setDuration] = useState(event ? (new Date(event.end) - new Date(event.start)) / 60000 : 15);
+  const [color, setColor] = useState(event?.backgroundColor || "#3b82f6");
 
   const handleSave = () => {
     if (title && date) {
       const startDate = new Date(date);
       const endDate = new Date(startDate.getTime() + duration * 60000);
 
-      onSave({
+      const newEvent = {
+        ...event,
+        id: event?.id || Date.now().toString(),
         title,
         start: startDate.toISOString(),
         end: endDate.toISOString(),
-        color,
-      });
+        backgroundColor: color,
+      };
 
+      onSave(newEvent);
       onClose();
     } else {
       alert("Please provide a title, date, and duration!");
@@ -28,7 +31,7 @@ function AddEventModal({ onClose, onSave }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Add New Event</h2>
+        <h2>{event ? "Edit Event" : "Add New Event"}</h2>
         <div className="form-group">
           <label>Event Title</label>
           <input
@@ -70,6 +73,11 @@ function AddEventModal({ onClose, onSave }) {
           </div>
         </div>
         <div className="modal-actions">
+          {event && (
+            <button className="cancel-button" onClick={() => onDelete(event.id)}>
+              Delete
+            </button>
+          )}
           <button className="cancel-button" onClick={onClose}>
             Cancel
           </button>
