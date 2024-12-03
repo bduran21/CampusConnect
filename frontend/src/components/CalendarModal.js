@@ -5,6 +5,7 @@ import "../styles/CalendarModal.scss";
 
 function CalendarModal({ friend, onClose, onJoinCalendars }) {
   const [friendEvents, setFriendEvents] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("#4caf50"); // Default color
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,9 +14,9 @@ function CalendarModal({ friend, onClose, onJoinCalendars }) {
   }, [friend.id]);
 
   const handleJoinClick = () => {
-    if (window.confirm(`Join ${friend.name}'s calendar?`)) {
+    if (window.confirm(`Join ${friend.name}'s calendar with selected color?`)) {
       const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
-      const userId = "alex"; // Replace with actual user ID
+      const userId = "alex"; // Replace with actual user ID logic
       const userCalendar = allCalendars[userId] || { events: [] };
 
       const updatedUserEvents = [
@@ -24,6 +25,7 @@ function CalendarModal({ friend, onClose, onJoinCalendars }) {
           ...event,
           id: `${friend.id}-${event.id}`, // Ensure unique IDs
           title: `${event.title} (From ${friend.name})`,
+          backgroundColor: selectedColor, // Apply selected color
         })),
       ];
 
@@ -40,6 +42,15 @@ function CalendarModal({ friend, onClose, onJoinCalendars }) {
       <div className="modal-content">
         <h2>{friend.name}'s Calendar</h2>
         <Calendar userId={friend.id} isEditable={false} events={friendEvents} />
+        <div className="color-picker">
+          <label htmlFor="event-color">Select Event Color:</label>
+          <input
+            type="color"
+            id="event-color"
+            value={selectedColor}
+            onChange={(e) => setSelectedColor(e.target.value)}
+          />
+        </div>
         <div className="modal-actions">
           <button onClick={onClose} className="close-modal-button">
             Close
