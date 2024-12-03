@@ -13,11 +13,17 @@ function Calendar({ userId, isEditable = true, currentView = "timeGridWeek", eve
   const [selectedEvent, setSelectedEvent] = useState(null);
   const calendarRef = useRef(null);
 
+  // Load events for the given user
   useEffect(() => {
     if (propEvents && propEvents.length > 0) {
-      setEvents(propEvents); // Replace existing events
+      setEvents(propEvents);
+    } else {
+      const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+      if (allCalendars[userId]) {
+        setEvents(allCalendars[userId].events);
+      }
     }
-  }, [propEvents]);
+  }, [userId, propEvents]);
 
   const handleAddEvent = (newEvent) => {
     const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};

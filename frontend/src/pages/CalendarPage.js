@@ -7,25 +7,28 @@ import Calendar from "../components/Calendar";
 import "../styles/CalendarPage.scss";
 
 function CalendarPage() {
-  const { userId } = useAuth(); // Retrieve user ID from Clerk
+  const { userId } = useAuth(); // User ID from authentication
   const [events, setEvents] = useState([]);
 
-  useEffect(() => {
-    const loadEvents = () => {
-      const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
-      const userEvents = allCalendars[userId]?.events || [];
-      setEvents(userEvents); // Only set user's events here
-    };
+  const loadUserEvents = () => {
+    const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+    const userEvents = allCalendars[userId]?.events || [];
+    setEvents(userEvents);
+  };
 
-    loadEvents();
+  useEffect(() => {
+    loadUserEvents();
   }, [userId]);
 
   const handleEventsChange = (updatedEvents) => {
-    setEvents(updatedEvents);
-
     const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
     allCalendars[userId] = { events: updatedEvents };
     localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
+    setEvents(updatedEvents);
+  };
+
+  const handleJoinCalendars = () => {
+    loadUserEvents(); // Reload events after joining a friend's calendar
   };
 
   return (
@@ -34,7 +37,6 @@ function CalendarPage() {
       <div className="calendar-content">
         <Sidebar events={events} />
         <div className="calendar-wrapper">
-          <h1>My Calendar</h1>
           <Calendar
             userId={userId}
             isEditable={true}

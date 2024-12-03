@@ -1,70 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Calendar from "./Calendar";
 import "../styles/CalendarModal.scss";
 
-function CalendarModal({ friend, onClose, onJoinCalendars }) {
-  const [currentView, setCurrentView] = useState("timeGridWeek");
-  const [selectedColor, setSelectedColor] = useState("#81d4fa"); // Default color for events
+function CalendarModal({ friend, onClose }) {
+  const [friendEvents, setFriendEvents] = useState([]);
   const navigate = useNavigate();
 
-  const handleViewChange = (event) => {
-    setCurrentView(event.target.value);
-  };
+  useEffect(() => {
+    const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+    setFriendEvents(allCalendars[friend.id]?.events || []);
+  }, [friend.id]);
 
   const handleJoinCalendars = () => {
-    if (window.confirm(`Join ${friend.name}'s calendar with events in color ${selectedColor}?`)) {
-      onJoinCalendars(friend.id, selectedColor); // Add events to user's calendar
-      navigate("/calendar"); // Redirect to the main calendar page
-    }
+    const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+    const userId = localStorage.getItem("user-id"); // Replace with actual authenticated user ID
+    const userEvents = allCalendars[userId]?.events || [];
+
+    const updatedUserEvents = [
+      ...userEvents,
+      ...friendEvents.map((event) => ({
+        ...event,
+        id: `${friend.id}-${event.id}`,
+        title: `${event.title} (From ${friend.name})`,
+      })),
+    ];
+
+    allCalendars[userId] = { events: updatedUserEvents };
+    localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
+
+    navigate("/calendar");
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <div className="modal-header">
-          <h2>{friend.name}'s Calendar</h2>
-        </div>
-
-        <div className="calendar-view-switcher">
-          <label htmlFor="view-select">View: </label>
-          <select
-            id="view-select"
-            value={currentView}
-            onChange={handleViewChange}
-          >
-            <option value="timeGridDay">Day</option>
-            <option value="timeGridWeek">Week</option>
-            <option value="dayGridMonth">Month</option>
-          </select>
-        </div>
-
-        <div className="calendar-container">
-          <Calendar
-            userId={friend.id}
-            isEditable={false}
-            currentView={currentView}
-          />
-        </div>
-
-        <div className="color-picker">
-          <label htmlFor="event-color">Event Color: </label>
-          <input
-            type="color"
-            id="event-color"
-            value={selectedColor}
-            onChange={(e) => setSelectedColor(e.target.value)}
-          />
-        </div>
-
-        <div className="modal-footer">
-          <button className="close-modal-button" onClick={onClose}>
-            Close
-          </button>
-          <button className="join-calendars-button" onClick={handleJoinCalendars}>
-            Join Calendars
-          </button>
-        </div>
+        <h2>{friend.name}'s Calendar</h2>
+        <Calendar userId={friend.id} isEditable={false} events={friendEvents} />
+        <button onClick={handleJoinCalendars}>Join Calendars</button>
+        <button onClick={onClose}>Close</button>
       </div>
     </div>
   );

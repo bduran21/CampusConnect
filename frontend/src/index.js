@@ -13,33 +13,26 @@ if (!PUBLISHABLE_KEY) {
   );
 }
 
-// Helper to generate random events for demo friends
-function generateRandomEvents(startDate, daysCount = 30) {
+function generateRandomEvents(daysCount = 7) {
   const events = [];
+  const now = new Date();
   for (let i = 0; i < daysCount; i++) {
-    const randomHour = Math.floor(Math.random() * 12) + 8; // Between 8 AM and 8 PM
-    const randomMinute = Math.floor(Math.random() * 4) * 15; // 0, 15, 30, 45 minutes
-    const duration = Math.floor(Math.random() * 4) + 1; // 1 to 4 * 15 minutes
-
-    const start = new Date(startDate);
-    start.setDate(start.getDate() + i);
-    start.setHours(randomHour, randomMinute);
-
+    const start = new Date(now);
+    start.setDate(now.getDate() + i);
+    start.setHours(9 + i, 0); // Spread events out through the day
     const end = new Date(start);
-    end.setMinutes(start.getMinutes() + duration * 15);
-
+    end.setHours(start.getHours() + 1);
     events.push({
-      id: `${i}-${Math.random().toString(36).substring(7)}`,
+      id: `event-${i}`,
       title: `Event ${i + 1}`,
       start: start.toISOString(),
       end: end.toISOString(),
-      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Random color
+      backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
     });
   }
   return events;
 }
 
-// Initialize hardcoded demo friends
 function initializeDemoFriends() {
   const demoFriends = [
     { id: "friend1", name: "Alice Demo", imageUrl: "https://via.placeholder.com/40" },
@@ -49,39 +42,26 @@ function initializeDemoFriends() {
 
   const storedFriends = JSON.parse(localStorage.getItem("friends")) || [];
   const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
-  const startDate = new Date();
 
-  // Add demo friends only if they are not already added
-  demoFriends.forEach((demoFriend) => {
-    const isFriendExists = storedFriends.some((friend) => friend.id === demoFriend.id);
-    if (!isFriendExists) {
-      storedFriends.push(demoFriend);
-
-      // Initialize events for the demo friend
-      if (!allCalendars[demoFriend.id]) {
-        allCalendars[demoFriend.id] = { events: generateRandomEvents(startDate) };
-      }
+  demoFriends.forEach((friend) => {
+    if (!storedFriends.some((f) => f.id === friend.id)) {
+      storedFriends.push(friend);
+      allCalendars[friend.id] = { events: generateRandomEvents() };
     }
   });
 
-  // Save updated friends and calendars to localStorage
   localStorage.setItem("friends", JSON.stringify(storedFriends));
   localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
 }
 
-// Initialize app data only once
 initializeDemoFriends();
 
-// Render the app
 const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ClerkProvider
-      publishableKey={PUBLISHABLE_KEY}
-      navigate={(to) => window.location.replace(to)}
-    >
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
