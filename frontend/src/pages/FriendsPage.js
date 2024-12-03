@@ -2,20 +2,21 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import AddFriendModal from "../components/AddFriendModal";
+import CalendarModal from "../components/CalendarModal";
 import ToggleSwitch from "../components/ToggleSwitch";
-import CalendarModal from "../components/CalendarModal"; // New Component
 import "../styles/FriendsPage.scss";
 
 function FriendsPage() {
   const [friends, setFriends] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isGridView, setIsGridView] = useState(true); // Track view state
-  const [selectedFriend, setSelectedFriend] = useState(null); // Track selected friend for the modal
+  const [isGridView, setIsGridView] = useState(true);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
+  // Load friends from localStorage on component mount
   useEffect(() => {
     const storedFriends = localStorage.getItem("friends");
     if (storedFriends) {
-      setFriends(JSON.parse(storedFriends)); // Parse and set the friends list
+      setFriends(JSON.parse(storedFriends));
     }
   }, []);
 
@@ -32,26 +33,47 @@ function FriendsPage() {
     setFriends(updatedFriends);
     localStorage.setItem("friends", JSON.stringify(updatedFriends));
 
-    // Check if friend exists in `all-calendars`, add them if not
     const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
     if (!allCalendars[friend.id]) {
-      allCalendars[friend.id] = {
-        events: [], // Initialize with an empty event list
-      };
+      allCalendars[friend.id] = { events: [] };
       localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
     }
 
-    // Close the modal and show an alert
     setIsModalOpen(false);
     alert(`${friend.name} is now your friend!`);
   };
 
+  const handleJoinCalendars = (friendId, color) => {
+    const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+    const userCalendar = allCalendars["currentUserId"]?.events || [];
+    const friendCalendar = allCalendars[friendId]?.events || [];
+
+    const updatedCalendar = [
+      ...userCalendar,
+      ...friendCalendar.map((event) => ({
+        ...event,
+        id: `${friendId}-${event.id}`, // Ensure unique IDs
+        title: `${event.title} (From ${friends.find((f) => f.id === friendId)?.name})`, // Add friend's name
+        backgroundColor: color, // Use the selected color
+      })),
+    ];
+
+    allCalendars["currentUserId"] = { events: updatedCalendar };
+    localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
+    alert("Calendars successfully joined!");
+  };
+
   const handleRightClick = (event, friend) => {
-    event.preventDefault(); // Prevent the default context menu
+    event.preventDefault();
     if (window.confirm(`Delete ${friend.name} from your friends?`)) {
       const updatedFriends = friends.filter((f) => f.id !== friend.id);
       setFriends(updatedFriends);
       localStorage.setItem("friends", JSON.stringify(updatedFriends));
+
+      // Remove calendar data for the friend
+      const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+      delete allCalendars[friend.id];
+      localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
     }
   };
 
@@ -84,7 +106,7 @@ function FriendsPage() {
               className="friend-card"
               key={friend.id}
               onClick={() => openFriendCalendar(friend)}
-              onContextMenu={(e) => handleRightClick(e, friend)} // Right-click event listener
+              onContextMenu={(e) => handleRightClick(e, friend)}
             >
               <div className="avatar">
                 {friend.imageUrl ? (
@@ -101,10 +123,17 @@ function FriendsPage() {
         </div>
       </main>
       {selectedFriend && (
-        <CalendarModal friend={selectedFriend} onClose={closeFriendCalendar} />
+        <CalendarModal
+          friend={selectedFriend}
+          onClose={closeFriendCalendar}
+          onJoinCalendars={handleJoinCalendars} // Pass the join calendars handler
+        />
       )}
       {isModalOpen && (
-        <AddFriendModal onClose={() => setIsModalOpen(false)} onAddFriend={addFriend} />
+        <AddFriendModal
+          onClose={() => setIsModalOpen(false)}
+          onAddFriend={addFriend}
+        />
       )}
       <Footer />
     </div>
