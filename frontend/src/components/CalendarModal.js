@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "./Calendar";
 import "../styles/CalendarModal.scss";
 
-function CalendarModal({ friend, onClose }) {
+function CalendarModal({ friend, onClose, onJoinCalendars }) {
   const [friendEvents, setFriendEvents] = useState([]);
   const navigate = useNavigate();
 
@@ -12,24 +12,27 @@ function CalendarModal({ friend, onClose }) {
     setFriendEvents(allCalendars[friend.id]?.events || []);
   }, [friend.id]);
 
-  const handleJoinCalendars = () => {
-    const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
-    const userId = localStorage.getItem("user-id"); // Replace with actual authenticated user ID
-    const userEvents = allCalendars[userId]?.events || [];
+  const handleJoinClick = () => {
+    if (window.confirm(`Join ${friend.name}'s calendar?`)) {
+      const allCalendars = JSON.parse(localStorage.getItem("all-calendars")) || {};
+      const userId = "alex"; // Replace with actual user ID
+      const userCalendar = allCalendars[userId] || { events: [] };
 
-    const updatedUserEvents = [
-      ...userEvents,
-      ...friendEvents.map((event) => ({
-        ...event,
-        id: `${friend.id}-${event.id}`,
-        title: `${event.title} (From ${friend.name})`,
-      })),
-    ];
+      const updatedUserEvents = [
+        ...userCalendar.events,
+        ...friendEvents.map((event) => ({
+          ...event,
+          id: `${friend.id}-${event.id}`, // Ensure unique IDs
+          title: `${event.title} (From ${friend.name})`,
+        })),
+      ];
 
-    allCalendars[userId] = { events: updatedUserEvents };
-    localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
-
-    navigate("/calendar");
+      allCalendars[userId] = { events: updatedUserEvents };
+      localStorage.setItem("all-calendars", JSON.stringify(allCalendars));
+      onJoinCalendars(updatedUserEvents);
+      alert(`${friend.name}'s calendar has been added to your calendar.`);
+      navigate("/calendar"); // Redirect to the main calendar page
+    }
   };
 
   return (
@@ -38,11 +41,11 @@ function CalendarModal({ friend, onClose }) {
         <h2>{friend.name}'s Calendar</h2>
         <Calendar userId={friend.id} isEditable={false} events={friendEvents} />
         <div className="modal-actions">
-          <button onClick={handleJoinCalendars} className="join-calendar-button">
-            Join Calendars
-          </button>
           <button onClick={onClose} className="close-modal-button">
             Close
+          </button>
+          <button onClick={handleJoinClick} className="join-calendar-button">
+            Join Calendar
           </button>
         </div>
       </div>
